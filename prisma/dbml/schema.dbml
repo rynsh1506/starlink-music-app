@@ -1,0 +1,14 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Artist {
+  id String [pk]
+  PackageName String [not null]
+  ArtistName String [not null]
+  ImageURL String [not null]
+  SampleURL String [not null]
+  ReleaseDate DateTime [not null]
+  CreatedAt DateTime [default: `now()`, not null]
+  UpdatedAt DateTime [not null]
+}

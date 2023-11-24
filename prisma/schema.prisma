@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+model Artist {
+  id          String   @id @default(cuid())
+  PackageName String   @db.VarChar(100)
+  ArtistName  String   @db.VarChar(100)
+  ImageURL    String   @db.VarChar(200)
+  SampleURL   String   @db.VarChar(200)
+  ReleaseDate DateTime @db.Timestamptz()
+  CreatedAt   DateTime @default(now()) @db.Timestamptz()
+  UpdatedAt   DateTime @updatedAt @db.Timestamptz()
+}

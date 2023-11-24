@@ -1,0 +1,13 @@
+-- CreateTable
+CREATE TABLE "Artist" (
+    "id" TEXT NOT NULL,
+    "PackageName" VARCHAR(100) NOT NULL,
+    "ArtistName" VARCHAR(100) NOT NULL,
+    "ImageURL" VARCHAR(200) NOT NULL,
+    "SampleURL" VARCHAR(200) NOT NULL,
+    "ReleaseDate" TIMESTAMPTZ NOT NULL,
+    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "UpdatedAt" TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
+);

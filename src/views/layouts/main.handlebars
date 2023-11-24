@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music App</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="bg-dark text-white text-center py-4">
+    <h1>Music App</h1>
+  </header>
+
+  <!-- Container -->
+  <div class="container my-4">
+    <!-- Content goes here -->
+    {{{ body }}}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#artistsTable').DataTable();
+      });
+
+    $(document).ready(function () {
+        const activeAudios = {};
+
+        $('.audio-control').on('click', function () {
+          const audioUrl = $(this).data('audio');
+          let audio = activeAudios[audioUrl];
+
+          const playIcon = $(this).find('.play-icon');
+          const pauseIcon = $(this).find('.pause-icon');
+
+          Object.keys(activeAudios).forEach(function (key) {
+            if (key !== audioUrl) {
+              const otherAudio = activeAudios[key];
+              const otherPlayIcon = $(
+                `.audio-control[data-audio="${key}"] .play-icon`,
+              );
+              const otherPauseIcon = $(
+                `.audio-control[data-audio="${key}"] .pause-icon`,
+              );
+
+              if (!otherAudio.paused) {
+                otherAudio.pause();
+                otherAudio.currentTime = 0;
+                otherPlayIcon.show();
+                otherPauseIcon.hide();
+              }
+            }
+          });
+
+          if (!audio) {
+            audio = new Audio(audioUrl);
+            activeAudios[audioUrl] = audio;
+            audio.addEventListener('ended', function () {
+              delete activeAudios[audioUrl];
+              playIcon.show();
+              pauseIcon.hide();
+            });
+
+            audio.addEventListener('pause', function () {
+              if (audio.currentTime === 0 || audio.currentTime === audio.duration) {
+                delete activeAudios[audioUrl];
+                playIcon.show();
+                pauseIcon.hide();
+              }
+            });
+          }
+
+          playIcon.toggle();
+          pauseIcon.toggle();
+
+          if (audio.paused) {
+            audio.play();
+          } else {
+            audio.pause();
+            audio.currentTime = 0;
+          }
+        });
+
+        $('.btn-danger').click(function () {
+          if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+            var dataId = $(this).data('id');
+            $.ajax({
+              type: 'DELETE',
+              url: `http://localhost:3035/artists/${dataId}`,
+              success: function (response) {
+                $('#row_' + dataId).remove();
+              },
+              error: function (error) {
+                console.error('Terjadi kesalahan:', error);
+              },
+            });
+          }
+        });
+      });
+
+      function submitForm() {
+        const packageName = $('#PackageName').val();
+        const artistName = $('#ArtistName').val();
+        const releaseDate = $('#ReleaseDate').val();
+        const musicLink = $('#MusicLink').val();
+        const imageFile = $('#ImageFile')[0].files[0];
+        const id = $('#Id').val();
+
+        if (!packageName || !artistName || !releaseDate || !musicLink || !imageFile) {
+          alert('Please fill in all fields');
+          return;
+        }
+
+        const isUpdate = $('#modalTitle')
+          .text()
+          .toLowerCase()
+          .includes('update data');
+        uploadImage(imageFile)
+          .then(function (response) {
+            // Mendapatkan nama file dari respons /image
+            const imageName = response[0].name;
+            const dataToSend = {
+              PackageName: packageName,
+              ArtistName: artistName,
+              ReleaseDate: new Date(releaseDate),
+              SampleURL: musicLink,
+              ImageURL: imageName,
+            };
+
+            const jsonData = JSON.stringify(dataToSend);
+
+            return $.ajax({
+              type: isUpdate ? 'PATCH' : 'POST',
+              url: `http://localhost:3035/artists/${isUpdate ? $('#Id').val() : ''}`,
+              data: jsonData,
+              processData: false,
+              contentType: 'application/json',
+            });
+          })
+          .then(function (response) {
+            alert(`Artis berhasil di ${isUpdate ? 'Update' : 'Add'}`);
+            location.reload(true);
+          })
+          .catch(function (error) {
+            console.error('Terjadi kesalahan:', error);
+          });
+      }
+
+      function uploadImage(imageFile) {
+        console.log('Uploading image...');
+        const formData = new FormData();
+        formData.append('ImageFile', imageFile);
+
+        return $.ajax({
+          type: 'POST',
+          url: 'http://localhost:3035/images',
+          data: formData,
+          processData: false,
+          contentType: false,
+        });
+      }
+
+      function openUpdateModal(button) {
+        $('#modalTitle').text('Update Data');
+        const dataId = $(button).data('id');
+        $.ajax({
+          url: `http://localhost:3035/artists/${dataId}`,
+          method: 'GET',
+          success: function (response) {
+            $('#PackageName').val(response.PackageName);
+            $('#ArtistName').val(response.ArtistName);
+            $('#MusicLink').val(response.SampleURL);
+            $('#Id').val(response.id);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+          },
+        });
+      }
+
+      function openAddModal() {
+        // Change modal title
+        $('#modalTitle').text('Add Data');
+        $('#PackageName').val('');
+        $('#ArtistName').val('');
+        $('#MusicLink').val('');
+        $('#Id').val('');
+      }
+
+      function openUpdateModal(button) {
+        $('#modalTitle').text('Update Data');
+        const dataId = $(button).data("id");
+        $.ajax({
+          url: `http://localhost:3035/artists/${dataId}`,
+          method: 'GET',
+          success: function (response) {
+            $('#PackageName').val(response.PackageName);
+            $('#ArtistName').val(response.ArtistName);
+            $('#MusicLink').val(response.SampleURL);
+            $('#Id').val(response.id);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      }
+  </script>
+</body>
+
+</html>
