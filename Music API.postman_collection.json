@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "ff588909-9f11-42d4-a243-51e14e49e29f",
+		"name": "Music API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24199245"
+	},
+	"item": [
+		{
+			"name": "Music",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"PackageName\": \"Bintang Kecil\",\n    \"ArtistName\": \"Cinta\",\n    \"ImageURL\": \"17007200203032c45b97c.jpeg\",\n    \"ReleaseDate\": \"2023-11-23T00:00:00.000Z\",\n    \"SampleURL\": \"http://www.tonycuffe.com/mp3/tailtoddle_lo.mp3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/artists",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"artists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"PackageName\": \"input.ArtistName\",\n    \"ArtistName\": \"input.PackageName\",\n    \"ImageURL\": \"input.ImageURL\",\n    \"ReleaseDate\": \"2023-11-23T00:00:00.000Z\",\n    \"SampleURL\": \"input.SampleURL\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/artists/:id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"artists",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "clpambnhf0000fuccs7vgjpkg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/artists",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"artists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/artists/:id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"artists",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/artists/delete/:id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"artists",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"item": [
+				{
+					"name": "Upload Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image_name1",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "image_name2",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base-url}}/images",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/images/:name",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"images",
+								":name"
+							],
+							"variable": [
+								{
+									"key": "name",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "http://localhost:3000"
+		}
+	]
+}
