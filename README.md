@@ -25,15 +25,6 @@ Starter template for 😻 [NestJS](https://nestjs.com/) and [Prisma](https://www
   - [Rest Api](#rest-api)
   - [Docker](#docker)
   - [Schema Development](#schema-development)
-  - [NestJS - Api Schema](#nestjs---api-schema)
-    - [Resolver](#resolver)
-  - [GraphQL Client](#graphql-client)
-    - [Angular](#angular)
-      - [Setup](#setup)
-      - [Queries](#queries)
-      - [Mutations](#mutations)
-      - [Subscriptions](#subscriptions)
-      - [Authentication](#authentication)
 
 ## Prisma Setup
 
