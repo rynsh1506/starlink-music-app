@@ -134,19 +134,7 @@ Run Nest Server in Production mode:
 npm run start:prod
 ```
 
-GraphQL Playground for the NestJS Server is available here: http://localhost:3000/graphql
-
 **[⬆ back to top](#overview)**
-
-## GraphQL Playground
-
-Open up the [example GraphQL queries](graphql/auth.graphql) and copy them to the GraphQL Playground. Some queries and mutations are secured by an auth guard. You have to acquire a JWT token from `signup` or `login`. Add the `accessToken`as followed to **HTTP HEADERS** in the playground and replace `YOURTOKEN` here:
-
-```json
-{
-  "Authorization": "Bearer YOURTOKEN"
-}
-```
 
 ## Rest Api
 
@@ -224,26 +212,5 @@ npx prisma generate --watch
 npm run prisma:generate
 npm run prisma:generate:watch
 ```
-
-**[⬆ back to top](#overview)**
-
-## NestJS - Api Schema
-
-The [schema.graphql](./src/schema.graphql) is generated with [code first approach](https://docs.nestjs.com/graphql/quick-start#code-first) from the models, resolvers and input classes.
-
-You can use [class-validator](https://docs.nestjs.com/techniques/validation) to validate your inputs and arguments.
-
-### Resolver
-
-To implement the new query, a new resolver function needs to be added to `users.resolver.ts`.
-
-```ts
-@Query(returns => User)
-async getUser(@Args() args): Promise<User> {
-  return await this.prisma.client.user(args);
-}
-```
-
-Restart the NestJS server and this time the Query to fetch a `user` should work.
 
 **[⬆ back to top](#overview)**
