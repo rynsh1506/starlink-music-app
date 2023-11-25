@@ -14,8 +14,9 @@ export class ArtistsService {
     @InjectMapper() private readonly mapper: Mapper,
     private readonly prisma: PrismaService,
   ) {}
-  async findAll(skip?: any, take?: any) {
+  async findAll(skip?: number, take?: number) {
     const artist = await this.prisma.artist.findMany({
+      skip,
       take,
     });
 

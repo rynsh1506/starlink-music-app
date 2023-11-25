@@ -11,7 +11,7 @@ export class AppController {
 
   @Get()
   @Render('index')
-  home(@Query('skip') skip, @Query('take') take = 10) {
+  home(@Query('skip') skip: number, @Query('take') take: number) {
     return this.artistService.findAll(+skip, +take);
   }
 }
