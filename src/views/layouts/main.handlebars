@@ -99,7 +99,7 @@
             var dataId = $(this).data('id');
             $.ajax({
               type: 'DELETE',
-              url: `http://localhost:3035/artists/${dataId}`,
+              url: `http://localhost:3000/artists/${dataId}`,
               success: function (response) {
                 $('#row_' + dataId).remove();
               },
@@ -144,7 +144,7 @@
 
             return $.ajax({
               type: isUpdate ? 'PATCH' : 'POST',
-              url: `http://localhost:3035/artists/${isUpdate ? $('#Id').val() : ''}`,
+              url: `http://localhost:3000/artists/${isUpdate ? $('#Id').val() : ''}`,
               data: jsonData,
               processData: false,
               contentType: 'application/json',
@@ -166,7 +166,7 @@
 
         return $.ajax({
           type: 'POST',
-          url: 'http://localhost:3035/images',
+          url: 'http://localhost:3000/images',
           data: formData,
           processData: false,
           contentType: false,
@@ -177,7 +177,7 @@
         $('#modalTitle').text('Update Data');
         const dataId = $(button).data('id');
         $.ajax({
-          url: `http://localhost:3035/artists/${dataId}`,
+          url: `http://localhost:3000/artists/${dataId}`,
           method: 'GET',
           success: function (response) {
             $('#PackageName').val(response.PackageName);
@@ -204,7 +204,7 @@
         $('#modalTitle').text('Update Data');
         const dataId = $(button).data("id");
         $.ajax({
-          url: `http://localhost:3035/artists/${dataId}`,
+          url: `http://localhost:3000/artists/${dataId}`,
           method: 'GET',
           success: function (response) {
             $('#PackageName').val(response.PackageName);
