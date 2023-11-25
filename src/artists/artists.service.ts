@@ -15,21 +15,18 @@ export class ArtistsService {
     private readonly prisma: PrismaService,
   ) {}
   async findAll(skip?: number, take?: number) {
-    const artist = await this.prisma.artist.findMany({
-      skip,
-      take,
-    });
+    const artist = await this.prisma.artist.findMany({});
 
     const mapArtists = this.mapper.mapArray(artist, Artist, GetArtistDto);
 
     const countData = await this.prisma.artist.count();
-    const page = Math.floor(skip / take) + 1;
-    const totalPage = Math.ceil(countData / take);
+    // const page = Math.floor(skip / take) + 1;
+    // const totalPage = Math.ceil(countData / take);
     return {
       total_data: countData,
-      limit: take,
-      page: page,
-      page_total: totalPage,
+      // limit: take,
+      // page: page,
+      // page_total: totalPage,
       data: mapArtists,
     };
   }
