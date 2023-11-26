@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { ArtistsStatusEnum, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -42,6 +42,7 @@ async function main() {
         ImageURL: '1700750054559f1dd642.jpeg',
         SampleURL: artist.SampleURL,
         ReleaseDate: new Date(),
+        Status: ArtistsStatusEnum.LISTED,
       },
     });
   }

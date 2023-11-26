@@ -8,6 +8,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -33,85 +34,90 @@
     src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
   <script>
     $(document).ready(function () {
-        $('#artistsTable').DataTable();
-      });
+      $('#artistsTable').DataTable();
+    })
 
     $(document).ready(function () {
         const activeAudios = {};
+      $('.audio-control').on('click', function () {
+        const audioUrl = $(this).data('audio');
+        let audio = activeAudios[audioUrl];
 
-        $('.audio-control').on('click', function () {
-          const audioUrl = $(this).data('audio');
-          let audio = activeAudios[audioUrl];
+        const playIcon = $(this).find('.play-icon');
+        const pauseIcon = $(this).find('.pause-icon');
 
-          const playIcon = $(this).find('.play-icon');
-          const pauseIcon = $(this).find('.pause-icon');
+        Object.keys(activeAudios).forEach(function (key) {
+          if (key !== audioUrl) {
+            const otherAudio = activeAudios[key];
+            const otherPlayIcon = $(`.audio-control[data-audio="${key}"] .play-icon`);
+            const otherPauseIcon = $(`.audio-control[data-audio="${key}"] .pause-icon`);
 
-          Object.keys(activeAudios).forEach(function (key) {
-            if (key !== audioUrl) {
-              const otherAudio = activeAudios[key];
-              const otherPlayIcon = $(
-                `.audio-control[data-audio="${key}"] .play-icon`,
-              );
-              const otherPauseIcon = $(
-                `.audio-control[data-audio="${key}"] .pause-icon`,
-              );
-
-              if (!otherAudio.paused) {
-                otherAudio.pause();
-                otherAudio.currentTime = 0;
-                otherPlayIcon.show();
-                otherPauseIcon.hide();
-              }
+            if (!otherAudio.paused) {
+              otherAudio.pause();
+              otherAudio.currentTime = 0;
+              otherPlayIcon.show();
+              otherPauseIcon.hide();
             }
+          }
+        });
+
+        if (!audio) {
+          audio = new Audio(audioUrl);
+          activeAudios[audioUrl] = audio;
+          audio.addEventListener('ended', function () {
+            delete activeAudios[audioUrl];
+            playIcon.show();
+            pauseIcon.hide();
           });
 
-          if (!audio) {
-            audio = new Audio(audioUrl);
-            activeAudios[audioUrl] = audio;
-            audio.addEventListener('ended', function () {
+          audio.addEventListener('pause', function () {
+            if (audio.currentTime === 0 || audio.currentTime === audio.duration) {
               delete activeAudios[audioUrl];
               playIcon.show();
               pauseIcon.hide();
-            });
+            }
+          });
+        }
 
-            audio.addEventListener('pause', function () {
-              if (audio.currentTime === 0 || audio.currentTime === audio.duration) {
-                delete activeAudios[audioUrl];
-                playIcon.show();
-                pauseIcon.hide();
-              }
-            });
-          }
+        playIcon.toggle();
+        pauseIcon.toggle();
 
-          playIcon.toggle();
-          pauseIcon.toggle();
-
-          if (audio.paused) {
-            audio.play();
-          } else {
-            audio.pause();
-            audio.currentTime = 0;
-          }
-        });
-
-        $('.btn-danger').click(function () {
-          if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-            var dataId = $(this).data('id');
-            $.ajax({
-              type: 'DELETE',
-              url: `http://localhost:3000/artists/${dataId}`,
-              success: function (response) {
-                $('#row_' + dataId).remove();
-              },
-              error: function (error) {
-                console.error('Terjadi kesalahan:', error);
-              },
-            });
-          }
-        });
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+          audio.currentTime = 0;
+        }
       });
+    });
 
-      function submitForm() {
+      function openUpdateModal(button) {
+        $('#modalTitle').text('Update Data');
+        const dataId = $(button).data('id');
+        $.ajax({
+          url: `http://localhost:3000/artists/${dataId}`,
+          method: 'GET',
+          success: function (response) {
+            $('#PackageName').val(response.PackageName);
+            $('#ArtistName').val(response.ArtistName);
+            $('#MusicLink').val(response.SampleURL);
+            $('#Id').val(response.id);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching data:', error);
+          },
+        });
+      }
+
+      function openAddModal() {
+        $('#modalTitle').text('Add Data');
+        $('#PackageName').val('');
+        $('#ArtistName').val('');
+        $('#MusicLink').val('');
+        $('#Id').val('');
+      }
+
+    function submitForm() {
         const packageName = $('#PackageName').val();
         const artistName = $('#ArtistName').val();
         const releaseDate = $('#ReleaseDate').val();
@@ -130,7 +136,6 @@
           .includes('update data');
         uploadImage(imageFile)
           .then(function (response) {
-            // Mendapatkan nama file dari respons /image
             const imageName = response[0].name;
             const dataToSend = {
               PackageName: packageName,
@@ -173,49 +178,45 @@
         });
       }
 
-      function openUpdateModal(button) {
-        $('#modalTitle').text('Update Data');
-        const dataId = $(button).data('id');
-        $.ajax({
-          url: `http://localhost:3000/artists/${dataId}`,
-          method: 'GET',
-          success: function (response) {
-            $('#PackageName').val(response.PackageName);
-            $('#ArtistName').val(response.ArtistName);
-            $('#MusicLink').val(response.SampleURL);
-            $('#Id').val(response.id);
-          },
-          error: function (xhr, status, error) {
-            console.error('Error fetching data:', error);
-          },
-        });
+      function revert(button) {
+         if (confirm('Apakah Anda yakin ingin revert data ini')) {
+            const dataId = $(button).data('id');
+           const dataToSend = {
+             Status: "LISTED",
+             DeletedAt: null
+           };
+           const jsonData = JSON.stringify(dataToSend);
+           return $.ajax({
+             type: 'PATCH',
+             url: `http://localhost:3000/artists/${dataId}`,
+             data: jsonData,
+             processData: false,
+             contentType: 'application/json',
+           })
+             .then(function (response) {
+               $('#row_' + dataId).remove();
+             })
+             .catch(function (error) {
+               console.error('Terjadi kesalahan:', error);
+             });
+         }
       }
 
-      function openAddModal() {
-        // Change modal title
-        $('#modalTitle').text('Add Data');
-        $('#PackageName').val('');
-        $('#ArtistName').val('');
-        $('#MusicLink').val('');
-        $('#Id').val('');
-      }
-
-      function openUpdateModal(button) {
-        $('#modalTitle').text('Update Data');
-        const dataId = $(button).data("id");
-        $.ajax({
-          url: `http://localhost:3000/artists/${dataId}`,
-          method: 'GET',
-          success: function (response) {
-            $('#PackageName').val(response.PackageName);
-            $('#ArtistName').val(response.ArtistName);
-            $('#MusicLink').val(response.SampleURL);
-            $('#Id').val(response.id);
-          },
-          error: function (xhr, status, error) {
-            console.error('Error fetching data:', error);
-          }
-        });
+      function remove (button) {
+        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+          let dataId = $(button).data('id');
+          let mode = $(button).data('mode');
+          $.ajax({
+            type: 'DELETE',
+            url: `http://localhost:3000/artists/${dataId}/${mode ? mode : ""}`,
+            success: function (response) {
+              $('#row_' + dataId).remove();
+            },
+            error: function (error) {
+              console.error('Terjadi kesalahan:', error);
+            },
+          });
+        }
       }
   </script>
 </body>

@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { ArtistsStatusEnum } from '@prisma/client';
 
 export class GetArtistDto {
   @AutoMap()
@@ -20,8 +21,14 @@ export class GetArtistDto {
   ReleaseDate: Date;
 
   @AutoMap()
+  Status: ArtistsStatusEnum;
+
+  @AutoMap()
   CreatedAt: Date;
 
   @AutoMap()
   UpdatedAt: Date;
+
+  @AutoMap()
+  DeletedAt: Date;
 }

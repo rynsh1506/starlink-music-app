@@ -8,7 +8,14 @@ Table Artist {
   ArtistName String [not null]
   ImageURL String [not null]
   SampleURL String [not null]
+  Status ArtistsStatusEnum [not null]
   ReleaseDate DateTime [not null]
   CreatedAt DateTime [default: `now()`, not null]
   UpdatedAt DateTime [not null]
+  DeletedAt DateTime
+}
+
+Enum ArtistsStatusEnum {
+  DELETED
+  LISTED
 }

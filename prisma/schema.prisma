@@ -15,12 +15,19 @@ generator dbml {
 }
 
 model Artist {
-  id          String   @id @default(cuid())
-  PackageName String   @db.VarChar(100)
-  ArtistName  String   @db.VarChar(100)
-  ImageURL    String   @db.VarChar(200)
-  SampleURL   String   @db.VarChar(200)
-  ReleaseDate DateTime @db.Timestamptz()
-  CreatedAt   DateTime @default(now()) @db.Timestamptz()
-  UpdatedAt   DateTime @updatedAt @db.Timestamptz()
+  id          String            @id @default(cuid())
+  PackageName String            @db.VarChar(100)
+  ArtistName  String            @db.VarChar(100)
+  ImageURL    String            @db.VarChar(200)
+  SampleURL   String            @db.VarChar(200)
+  Status      ArtistsStatusEnum
+  ReleaseDate DateTime          @db.Timestamptz()
+  CreatedAt   DateTime          @default(now()) @db.Timestamptz()
+  UpdatedAt   DateTime          @updatedAt @db.Timestamptz()
+  DeletedAt   DateTime?         @db.Timestamptz()
+}
+
+enum ArtistsStatusEnum {
+  DELETED
+  LISTED
 }

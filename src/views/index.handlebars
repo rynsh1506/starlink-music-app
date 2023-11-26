@@ -2,7 +2,12 @@
 
 <div class='d-flex justify-content-between align-items-center mb-2'>
 <h2>Artists List</h2>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUpdateModal" onclick="openAddModal()">Add</button>
+<div>
+<a type="button" class="btn btn-secondary" href='http://localhost:3000/deleted'>
+  <i class="fas fa-trash"></i>
+</a>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUpdateModal" onclick='openAddModal()'>Add</button>
+</div>
 </div>
 <table class="table" id="artistsTable">
   <thead>
@@ -26,15 +31,15 @@
       <td>{{ArtistName}}</td>
       <td>{{tts ReleaseDate}}</td>
       <td>
-        <button class="audio-control" data-audio="{{ SampleURL }}">
-          <i class="play-icon" style="font-style: normal;">▶️</i><i class="pause-icon"
-            style="display:none; font-style: normal;">⏹️</i>
+        <button class="audio-control btn-sm btn-primary shadow-none" data-audio="{{ SampleURL }}">
+          <i class="fas fa-play fa-lg play-icon"></i>
+          <i class="fas fa-stop fa-lg pause-icon" style="display:none"></i>
         </button>
       </td>
       <td>
-        <button type="button" class="btn btn-primary btn-update" data-toggle="modal" data-target="#addUpdateModal"
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUpdateModal"
           data-id="{{ id }}" onclick="openUpdateModal(this)">Update</button>
-        <button type="button" class="btn btn-danger" data-id="{{ id }}">Delete</button>
+        <button type="button" class="btn btn-danger btn-remove" data-id="{{ id }}" data-mode="" onclick='remove(this)'>Remove</button>
       </td>
     </tr>
     {{/each}}

@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateArtistDto } from './create-artist.dto';
+import { ArtistsStatusEnum } from '@prisma/client';
 
 export class UpdateArtistDto extends PartialType(CreateArtistDto) {
   @AutoMap()
@@ -20,4 +21,7 @@ export class UpdateArtistDto extends PartialType(CreateArtistDto) {
 
   @AutoMap()
   ReleaseDate: Date;
+
+  @AutoMap()
+  Status: ArtistsStatusEnum;
 }

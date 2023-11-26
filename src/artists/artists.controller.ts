@@ -17,8 +17,9 @@ export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Get()
-  async findAll(@Query('skip') skip = 0, @Query('take') take = 4) {
-    return this.artistsService.findAll(+skip, +take);
+  async findAll(@Query() query: any) {
+    const filter = this.artistsService.createFilter(query);
+    return this.artistsService.findAll(filter);
   }
 
   @Get(':id')
@@ -36,8 +37,8 @@ export class ArtistsController {
     return this.artistsService.update(id, updateArtisDto);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.artistsService.delete(id);
+  @Delete(':id/:mode?')
+  remove(@Param('id') id: string, @Param('mode') mode?: string) {
+    return this.artistsService.remove(id, mode);
   }
 }
