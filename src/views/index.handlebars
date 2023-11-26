@@ -6,7 +6,8 @@
 <a type="button" class="btn btn-secondary" href='http://localhost:3000/deleted'>
   <i class="fas fa-trash"></i>
 </a>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUpdateModal" onclick='openAddModal()'>Add</button>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUpdateModal" onclick='openAddModal()'><i class="fas fa-plus"></i>
+</button>
 </div>
 </div>
 <table class="table" id="artistsTable">
@@ -31,15 +32,15 @@
       <td>{{ArtistName}}</td>
       <td>{{tts ReleaseDate}}</td>
       <td>
-        <button class="audio-control btn-sm btn-primary shadow-none" data-audio="{{ SampleURL }}">
+        <button class="audio-control btn-sm btn-warning shadow-none" data-audio="{{ SampleURL }}">
           <i class="fas fa-play fa-lg play-icon"></i>
           <i class="fas fa-stop fa-lg pause-icon" style="display:none"></i>
         </button>
       </td>
       <td>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUpdateModal"
-          data-id="{{ id }}" onclick="openUpdateModal(this)">Update</button>
-        <button type="button" class="btn btn-danger btn-remove" data-id="{{ id }}" data-mode="" onclick='remove(this)'>Remove</button>
+          data-id="{{ id }}" onclick="openUpdateModal(this)"><i class="fas fa-edit"></i></button>
+        <button type="button" class="btn btn-danger btn-remove" data-id="{{ id }}" data-mode="" onclick='remove(this)'><i class="fas fa-times"></i></button>
       </td>
     </tr>
     {{/each}}

@@ -30,14 +30,14 @@
       <td>{{ArtistName}}</td>
       <td>{{tts ReleaseDate}}</td>
       <td>
-        <button class="audio-control btn-sm btn-primary shadow-none" data-audio="{{ SampleURL }}">
+        <button class="audio-control btn-sm btn-warning shadow-none" data-audio="{{ SampleURL }}">
           <i class="fas fa-play fa-lg play-icon"></i>
           <i class="fas fa-stop fa-lg pause-icon" style="display:none"></i>
         </button>
       </td>
       <td>
-        <button type="button" class="btn btn-primary" data-id="{{ id }}" onclick='revert(this)'>Revert</button>
-        <button type="button" class="btn btn-danger" data-id="{{ id }}" data-mode="force" onclick='remove(this)'>Delete</button>
+        <button type="button" class="btn btn-primary" data-id="{{ id }}" onclick='revert(this)'><i class="fas fa-undo"></i></button>
+        <button type="button" class="btn btn-danger" data-id="{{ id }}" data-mode="force" onclick='remove(this)'><i class="fas fa-trash"></i></button>
       </td>
     </tr>
     {{/each}}
